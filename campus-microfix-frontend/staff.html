@@ -5,162 +5,237 @@
   <title>Staff Dashboard – Campus MicroFix</title>
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f3f4f6;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f4f6f9;
       margin: 0;
     }
     header {
-      background: #111827;
+      background: #111827; /* Dark Gray/Black header */
       color: white;
-      padding: 12px 24px;
+      padding: 16px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     header a {
-      color: #e5e7eb;
+      color: #d1d5db;
       text-decoration: none;
-      margin-left: 12px;
-      font-size: 14px;
+      margin-left: 18px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    header a:hover {
+        color: white;
     }
     main {
-      max-width: 1100px;
-      margin: 24px auto;
+      max-width: 1200px;
+      margin: 32px auto;
       background: white;
-      padding: 24px 28px;
+      padding: 30px 35px;
       border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e5e7eb;
     }
     h1 {
       margin-top: 0;
+      color: #1f2937;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
     }
     .filters {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 20px;
       align-items: center;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+    label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #374151;
     }
     select, input[type="text"] {
-      padding: 6px 10px;
-      border-radius: 999px;
+      padding: 8px 12px;
+      border-radius: 8px;
       border: 1px solid #d1d5db;
-      font-size: 13px;
+      font-size: 14px;
+      min-width: 150px;
+    }
+    input[type="text"] {
+        border-radius: 999px;
+        min-width: 200px;
+    }
+    select:focus, input[type="text"]:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px #bfdbfe;
+        outline: none;
     }
     button {
       border: none;
       border-radius: 999px;
-      padding: 7px 14px;
+      padding: 8px 18px;
       background: #2563eb;
       color: white;
-      font-weight: 600;
-      font-size: 13px;
+      font-weight: 700;
+      font-size: 14px;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover:not(:disabled) {
+        background: #1d4ed8;
     }
     button:disabled {
-      opacity: 0.6;
+      background: #9ca3af;
       cursor: default;
     }
     table {
       width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      margin-top: 12px;
+      border-collapse: separate; /* Use separate for border-spacing */
+      border-spacing: 0 5px; /* Add space between rows */
+      font-size: 14px;
+      margin-top: 15px;
     }
     th, td {
       border-bottom: 1px solid #e5e7eb;
-      padding: 8px 6px;
+      padding: 10px 8px;
       text-align: left;
     }
     th {
-      font-size: 11px;
+      font-size: 12px;
       text-transform: uppercase;
       color: #6b7280;
+      background: #f9fafb;
+      font-weight: 600;
     }
     tr.issueRow {
       cursor: pointer;
+      background: white;
+      border: 1px solid #f3f4f6;
+      border-radius: 8px; /* Does not work on tr, but helps visual */
+      transition: background 0.15s;
     }
     tr.issueRow:hover {
-      background: #f9fafb;
+      background: #eff6ff; /* Light blue on hover */
     }
+    /* Apply rounded corners to cells in the row */
+    tr.issueRow td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    tr.issueRow td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
     .badge {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 4px 10px;
       border-radius: 999px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
     }
+    /* Statuses */
     .status-open { background:#fee2e2;color:#b91c1c; }
     .status-inprogress { background:#dbeafe;color:#1d4ed8; }
-    .status-resolved { background:#dcfce7;color:#15803d; }
+    .status-resolved { background:#dcfce7;color:#059669; }
+    /* Priorities */
     .priority-low { background:#e5e7eb;color:#374151; }
-    .priority-medium { background:#fef9c3;color:#854d0e; }
-    .priority-high { background:#fee2e2;color:#b91c1c; }
-    .priority-critical { background:#fecaca;color:#7f1d1d; }
+    .priority-medium { background:#fef08a;color:#a16207; }
+    .priority-high { background:#fecaca;color:#b91c1c; }
+    .priority-critical { background:#fce7f3;color:#be185d; } /* New Critical Color */
 
     .analytics {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 8px;
+      gap: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
     }
     .card {
-      padding: 10px 12px;
+      padding: 18px 20px;
       border-radius: 12px;
-      background: #f9fafb;
+      background: #ffffff;
       border: 1px solid #e5e7eb;
-      font-size: 13px;
-      min-width: 160px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      font-size: 16px;
+      min-width: 180px;
+      flex: 1;
+      transition: all 0.2s;
+    }
+    .card:hover {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        transform: translateY(-2px);
     }
     .card strong {
       display:block;
       font-size:12px;
       text-transform:uppercase;
       color:#6b7280;
-      margin-bottom:4px;
+      margin-bottom:6px;
+      font-weight: 700;
     }
+    .card span {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    #totalOpen { color: #b91c1c; }
+    #highCount { color: #be185d; }
+    #resolvedCount { color: #059669; }
+
     .msg {
-      font-size: 13px;
+      font-size: 14px;
       color: #6b7280;
+      margin-bottom: 8px;
     }
 
     /* Detail panel under the table */
     .detail-panel {
-      margin-top: 16px;
-      padding: 14px 16px;
+      margin-top: 25px;
+      padding: 20px;
       border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      font-size: 13px;
+      border: 2px solid #a5b4fc; /* Distinct border */
+      background: #eef2ff; /* Light indigo background */
+      font-size: 14px;
     }
     .detail-panel h2 {
-      margin: 0 0 8px 0;
-      font-size: 15px;
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: #4f46e5;
+      border-bottom: 1px solid #c7d2fe;
+      padding-bottom: 8px;
     }
     .detail-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 8px 16px;
-      margin-top: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px 20px;
+      margin-top: 10px;
     }
     .detail-label {
       font-size: 11px;
       text-transform: uppercase;
       color: #6b7280;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
+      font-weight: 700;
     }
     .detail-value {
-      font-size: 13px;
+      font-size: 14px;
       color: #111827;
+      font-weight: 500;
     }
     .detail-reason {
-      margin-top: 6px;
-      font-size: 12px;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f9fafb;
+      border: 1px solid #e0e7ff;
+      font-size: 13px;
       color: #374151;
     }
     .detail-reason strong {
       text-transform: none;
-      font-size: 12px;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -178,18 +253,16 @@
   <h1>Staff Dashboard</h1>
   <p class="msg">
     Select your department to view and manage assigned micro-issues.
-    Only staff with the access code can change statuses.
   </p>
-  <p class="msg">
-    Current staff access: <span id="staffAccessStatus">Not verified</span>
+  <p class="msg" style="font-weight: 600;">
+    Current staff access: <span id="staffAccessStatus" style="color: #4f46e5;">Not verified</span>
   </p>
 
-  <!-- Category guide for staff -->
-  <p class="msg">
-    <strong>Category guide:</strong>
-    IT – Wi-Fi, projector, systems ·
-    Maintenance – desks, chairs, AC, lights, leaks ·
-    Admin – markers, cleaning, timetables, forms
+  <p class="msg" style="margin-top: 15px;">
+    <strong style="color:#1f2937;">Category Guide:</strong>
+    <span class="badge status-inprogress">IT</span> – Wi-Fi, projector, systems ·
+    <span class="badge status-resolved">Maintenance</span> – desks, chairs, AC, lights, leaks ·
+    <span class="badge status-open">Admin</span> – markers, cleaning, timetables, forms
   </p>
 
   <div class="filters">
@@ -222,20 +295,20 @@
 
     <input type="text" id="searchInput" placeholder="Search title/description" />
     <button id="loadBtn">Load Issues</button>
-    <span id="statusText" class="msg"></span>
+    <span id="statusText" class="msg" style="margin: 0; font-style: italic;"></span>
   </div>
 
   <div class="analytics">
     <div class="card">
-      <strong>Total Open</strong>
+      <strong>Total Open Issues</strong>
       <span id="totalOpen">0</span>
     </div>
     <div class="card">
-      <strong>High & Critical</strong>
+      <strong>High & Critical Priority</strong>
       <span id="highCount">0</span>
     </div>
     <div class="card">
-      <strong>Resolved</strong>
+      <strong>Resolved This Period</strong>
       <span id="resolvedCount">0</span>
     </div>
   </div>
@@ -244,22 +317,20 @@
     <table>
       <thead>
         <tr>
-          <th>Title</th>
+          <th style="border-top-left-radius: 8px;">Title</th>
           <th>Priority</th>
           <th>Status</th>
           <th>Location</th>
           <th>Reported By</th>
           <th>Updated</th>
-          <th>Change Status</th>
+          <th style="border-top-right-radius: 8px;">Change Status</th>
         </tr>
       </thead>
       <tbody id="issuesBody">
-        <!-- rows here -->
-      </tbody>
+        </tbody>
     </table>
   </div>
 
-  <!-- Detail panel -->
   <div id="detailPanel" class="detail-panel" style="display:none;">
     <h2>Issue Details</h2>
     <div class="detail-grid">
@@ -294,15 +365,13 @@
     </div>
 
     <div class="detail-reason" id="detailClassReason">
-      <!-- Category reason -->
-    </div>
+      </div>
     <div class="detail-reason" id="detailPriorityReason">
-      <!-- Priority reason -->
-    </div>
+      </div>
 
     <div class="detail-reason">
-      <span class="detail-label">Description</span><br />
-      <span id="detailDescription" class="detail-value"></span>
+      <div class="detail-label">Description</div>
+      <span id="detailDescription" class="detail-value" style="color: #374151;"></span>
     </div>
   </div>
 </main>
@@ -433,12 +502,12 @@ function showDetails(issue) {
   detailDescription.textContent = issue.description || "-";
 
   detailClassReason.innerHTML =
-    `<span class="detail-label">Category reasoning</span><br/>
-     <span class="detail-value">${issue.classificationReason || "No details available."}</span>`;
+    `<div class="detail-label">Category Reasoning</div>
+     <div class="detail-value">${issue.classificationReason || "No details available."}</div>`;
 
   detailPriorityReason.innerHTML =
-    `<span class="detail-label">Priority reasoning</span><br/>
-     <span class="detail-value">${issue.priorityReason || "No details available."}</span>`;
+    `<div class="detail-label">Priority Reasoning</div>
+     <div class="detail-value">${issue.priorityReason || "No details available."}</div>`;
 
   detailPanel.style.display = "block";
 }
@@ -469,15 +538,25 @@ async function loadIssues() {
 }
 
 async function updateStatus(id, newStatus) {
+  // Check if a key was entered. If not, prevent status change.
+  if (!staffKey) {
+    alert("Please refresh and enter a staff access code to enable status changes.");
+    // Revert select back to original status if possible
+    const originalIssue = currentIssues.find(i => i._id === id);
+    if (originalIssue) {
+        document.querySelector(`.statusSelect[data-id="${id}"]`).value = originalIssue.status;
+    }
+    statusText.textContent = "Status change failed: Staff access key is missing.";
+    return;
+  }
+  
   try {
     const headers = {
       "Content-Type": "application/json"
     };
 
-    // Attach staff key if available
-    if (staffKey) {
-      headers["x-staff-key"] = staffKey;
-    }
+    // Attach staff key
+    headers["x-staff-key"] = staffKey;
 
     const res = await fetch(`${API_BASE}/issues/${id}`, {
       method: "PATCH",
@@ -488,27 +567,35 @@ async function updateStatus(id, newStatus) {
     const data = await res.json();
 
     if (!res.ok) {
+      // Revert select back to original status if update failed
+      const originalIssue = currentIssues.find(i => i._id === id);
+      if (originalIssue) {
+          document.querySelector(`.statusSelect[data-id="${id}"]`).value = originalIssue.status;
+      }
+      
       if (res.status === 403) {
-        statusText.textContent = "Invalid or missing staff access code.";
+        statusText.textContent = "Status change failed: Invalid or missing staff access code.";
       } else {
-        statusText.textContent = "Failed to update status.";
+        statusText.textContent = `Status change failed: ${data.error || "Server error."}`;
       }
       console.error("Failed to update status", data);
       return;
     }
 
-    statusText.textContent = `Status updated to "${newStatus}".`;
+    statusText.textContent = `✅ Status updated to "${newStatus}".`;
 
     const idx = currentIssues.findIndex(i => i._id === id);
     if (idx !== -1) {
       currentIssues[idx] = data;
       applyFilters();
       // If this issue is shown in details, update detail panel as well
-      showDetails(currentIssues[idx]);
+      if (detailPanel.style.display !== 'none' && detailTitle.textContent === data.title) {
+          showDetails(currentIssues[idx]);
+      }
     }
   } catch (err) {
     console.error(err);
-    statusText.textContent = "Failed to update status.";
+    statusText.textContent = "Status change failed: Network or unexpected error.";
   }
 }
 
@@ -525,8 +612,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (!staffKey) {
     statusEl.textContent = "No access code entered (view-only mode)";
+    statusEl.style.color = "#b91c1c"; /* Red for non-verified */
   } else {
-    statusEl.textContent = "Verified locally (status changes enabled)";
+    statusEl.textContent = "Access code verified (status changes enabled)";
+    statusEl.style.color = "#059669"; /* Green for verified */
   }
 
   loadIssues();

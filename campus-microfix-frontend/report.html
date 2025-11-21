@@ -5,105 +5,147 @@
   <title>Report Issue – Campus MicroFix</title>
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f3f4f6;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f4f6f9; /* Light background */
       margin: 0;
     }
     header {
-      background: #1f2937;
+      background: #4f46e5; /* Primary Indigo header */
       color: white;
-      padding: 12px 24px;
+      padding: 16px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     header a {
-      color: #e5e7eb;
+      color: #eef2ff;
       text-decoration: none;
-      margin-left: 12px;
-      font-size: 14px;
+      margin-left: 18px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    header a:hover {
+        color: white;
     }
     main {
-      max-width: 760px;
-      margin: 24px auto;
+      max-width: 700px;
+      margin: 32px auto;
       background: white;
-      padding: 24px 28px;
+      padding: 30px 35px;
       border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e5e7eb;
     }
     h1 {
       margin-top: 0;
+      color: #1f2937;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
     }
     label {
       display: block;
       font-size: 14px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-weight: 600;
+      color: #374151;
     }
     input[type="text"],
     input[type="email"],
     textarea {
       width: 100%;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: 8px;
       border: 1px solid #d1d5db;
-      font-size: 14px;
+      font-size: 15px;
       box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px #e0e7ff;
+        outline: none;
     }
     textarea {
       resize: vertical;
-      min-height: 90px;
+      min-height: 120px;
     }
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .checkbox-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .checkbox-row input[type="checkbox"] {
+        width: auto;
+        margin: 0;
     }
     .actions {
-      margin-top: 12px;
+      margin-top: 25px;
       display: flex;
-      gap: 12px;
+      gap: 15px;
       align-items: center;
     }
     button {
       border: none;
       border-radius: 999px;
-      padding: 10px 18px;
-      background: #2563eb;
+      padding: 10px 22px;
+      background: #4f46e5;
       color: white;
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 700;
+      font-size: 15px;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover:not(:disabled) {
+        background: #4338ca;
     }
     button:disabled {
-      opacity: 0.6;
+      background: #9ca3af;
       cursor: default;
     }
     .message {
-      margin-top: 12px;
-      font-size: 14px;
+      margin-top: 15px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
     }
     .message.success {
-      color: #059669;
+      background: #dcfce7; /* Light green */
+      color: #059669; /* Dark green */
+      border: 1px solid #a7f3d0;
     }
     .message.error {
-      color: #b91c1c;
+      background: #fee2e2; /* Light red */
+      color: #dc2626; /* Dark red */
+      border: 1px solid #fecaca;
     }
     .summary {
-      margin-top: 14px;
-      padding: 10px 12px;
+      margin-top: 20px;
+      padding: 15px 20px;
       border-radius: 10px;
-      background: #eff6ff;
+      background: #eff6ff; /* Light blue */
       border: 1px solid #bfdbfe;
       font-size: 14px;
+      line-height: 1.6;
+    }
+    .summary strong {
+        color: #4f46e5;
     }
     small.helper {
       font-size: 12px;
       color: #6b7280;
+      margin-top: 4px;
+      display: block;
     }
   </style>
 </head>
@@ -119,46 +161,47 @@
 
 <main>
   <h1>Report a Campus Micro-Issue</h1>
-  <p style="color:#4b5563;font-size:14px;">
-    Use this form for minor disruptions only: projector not working, broken desk, missing markers, empty water cooler, Wi-Fi slow in a room, etc.
+  <p style="color:#4b5563;font-size:15px;margin-bottom:30px;">
+    Use this form for **minor disruptions only** (e.g., broken desk, dead projector, missing supplies, Wi-Fi slow). For emergencies, contact campus security.
   </p>
 
   <form id="issueForm">
     <div class="field">
       <label for="email">Your Email / ID</label>
       <input type="email" id="email" required placeholder="e.g. student1@campus.edu" />
-      <small class="helper">We use this to show your issues on the tracking page.</small>
+      <small class="helper">This is essential for you to track your issue resolution status.</small>
     </div>
 
     <div class="field">
-      <label for="title">Short Title</label>
+      <label for="title">Short Title of the Issue</label>
       <input type="text" id="title" required placeholder="Projector not working in C-203" />
     </div>
 
     <div class="field">
-      <label for="description">Describe the Problem</label>
-      <textarea id="description" required placeholder="What exactly is wrong? Include room number and any details."></textarea>
+      <label for="description">Detailed Description</label>
+      <textarea id="description" required placeholder="What exactly is wrong? Include room number, details on the fault, and when it started."></textarea>
     </div>
 
     <div class="field">
-      <label for="location">Location</label>
-      <input type="text" id="location" required placeholder="Block C, Room 203" />
+      <label for="location">Location (Building and Room/Area)</label>
+      <input type="text" id="location" required placeholder="Block C, Room 203 or North Wing Restroom" />
     </div>
 
     <div class="field">
+        <label style="margin-bottom: 8px;">Severity Flags:</label>
       <div class="checkbox-row">
         <input type="checkbox" id="affectsClass" />
-        <label for="affectsClass" style="margin:0;font-weight:500;">Affects an ongoing class</label>
+        <label for="affectsClass" style="margin:0;font-weight:500;">Directly affects an **ongoing class** or lecture</label>
       </div>
       <div class="checkbox-row">
         <input type="checkbox" id="safetyRisk" />
-        <label for="safetyRisk" style="margin:0;font-weight:500;">Safety risk (electric, structural, etc.)</label>
+        <label for="safetyRisk" style="margin:0;font-weight:500;">Presents an **immediate safety risk** (e.g., exposed wire, large leak)</label>
       </div>
     </div>
 
     <div class="actions">
       <button type="submit" id="submitBtn">Submit Issue</button>
-      <span id="statusText" style="font-size:13px;color:#6b7280;"></span>
+      <span id="statusText" style="font-size:14px;color:#6b7280;font-style:italic;"></span>
     </div>
 
     <div id="message" class="message" style="display:none;"></div>
@@ -189,7 +232,7 @@ document.getElementById("issueForm").addEventListener("submit", async (e) => {
   summaryEl.style.display = "none";
 
   submitBtn.disabled = true;
-  statusText.textContent = "Submitting issue...";
+  statusText.textContent = "Submitting issue and determining priority...";
 
   try {
     const res = await fetch(`${API_BASE}/issues`, {
@@ -211,21 +254,21 @@ document.getElementById("issueForm").addEventListener("submit", async (e) => {
       throw new Error(data.error || "Failed to submit issue");
     }
 
-    messageEl.textContent = "Issue submitted successfully!";
+    messageEl.textContent = "✅ Issue submitted successfully! See auto-classification below.";
     messageEl.className = "message success";
     messageEl.style.display = "block";
 
     summaryEl.innerHTML = `
-  <strong>Auto-classification:</strong><br/>
+  <strong>Issue Classification Summary</strong><br/>
   Category: <b>${data.category}</b><br/>
   Priority: <b>${data.priority}</b><br/>
   Assigned Department: <b>${data.department}</b><br/>
   Assignee: <b>${data.assignee}</b><br/>
   Status: <b>${data.status}</b><br/>
-  <br/>
-  <strong>Why?</strong><br/>
-  ${data.classificationReason || ""}<br/>
-  ${data.priorityReason || ""}
+  <hr style="border:0;border-top:1px dashed #bfdbfe;margin:10px 0;"/>
+  <strong>Rationale:</strong><br/>
+  <span style="display:block;margin-bottom:5px;">Category: ${data.classificationReason || "No details available."}</span>
+  <span>Priority: ${data.priorityReason || "No details available."}</span>
 `;
 
     summaryEl.style.display = "block";
@@ -239,7 +282,7 @@ document.getElementById("issueForm").addEventListener("submit", async (e) => {
     document.getElementById("affectsClass").checked = false;
     document.getElementById("safetyRisk").checked = false;
   } catch (err) {
-    messageEl.textContent = err.message;
+    messageEl.textContent = `❌ Error: ${err.message}`;
     messageEl.className = "message error";
     messageEl.style.display = "block";
     statusText.textContent = "";
