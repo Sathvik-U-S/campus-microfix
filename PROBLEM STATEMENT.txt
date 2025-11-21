@@ -1,0 +1,1 @@
+Build a full stack web development that allows students and staff to report minor disruptions on campus (eg, projector not working, broken desks, missing markers, water cooler empty, wifi slow in a room). the system should automatically categorize , prioritize and assign issues to the approapriate department (IT, maintenance , admin , etc,) using simple rules or heuristics. 

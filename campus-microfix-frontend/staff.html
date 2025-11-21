@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff Dashboard – Campus MicroFix</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header a {
+      color: #e5e7eb;
+      text-decoration: none;
+      margin-left: 12px;
+      font-size: 14px;
+    }
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      background: white;
+      padding: 24px 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    select, input[type="text"] {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 6px;
+      text-align: left;
+    }
+    th {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+    tr.issueRow {
+      cursor: pointer;
+    }
+    tr.issueRow:hover {
+      background: #f9fafb;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-open { background:#fee2e2;color:#b91c1c; }
+    .status-inprogress { background:#dbeafe;color:#1d4ed8; }
+    .status-resolved { background:#dcfce7;color:#15803d; }
+    .priority-low { background:#e5e7eb;color:#374151; }
+    .priority-medium { background:#fef9c3;color:#854d0e; }
+    .priority-high { background:#fee2e2;color:#b91c1c; }
+    .priority-critical { background:#fecaca;color:#7f1d1d; }
+
+    .analytics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .card {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      min-width: 160px;
+    }
+    .card strong {
+      display:block;
+      font-size:12px;
+      text-transform:uppercase;
+      color:#6b7280;
+      margin-bottom:4px;
+    }
+    .msg {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    /* Detail panel under the table */
+    .detail-panel {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: 13px;
+    }
+    .detail-panel h2 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px 16px;
+      margin-top: 8px;
+    }
+    .detail-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 2px;
+    }
+    .detail-value {
+      font-size: 13px;
+      color: #111827;
+    }
+    .detail-reason {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #374151;
+    }
+    .detail-reason strong {
+      text-transform: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>Campus MicroFix – Department Dashboard</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="report.html">Report Issue</a>
+    <a href="student.html">Student Status</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Staff Dashboard</h1>
+  <p class="msg">
+    Select your department to view and manage assigned micro-issues.
+    Only staff with the access code can change statuses.
+  </p>
+  <p class="msg">
+    Current staff access: <span id="staffAccessStatus">Not verified</span>
+  </p>
+
+  <!-- Category guide for staff -->
+  <p class="msg">
+    <strong>Category guide:</strong>
+    IT – Wi-Fi, projector, systems ·
+    Maintenance – desks, chairs, AC, lights, leaks ·
+    Admin – markers, cleaning, timetables, forms
+  </p>
+
+  <div class="filters">
+    <label>Department:
+      <select id="deptSelect">
+        <option value="IT">IT</option>
+        <option value="Maintenance">Maintenance</option>
+        <option value="Admin">Admin</option>
+      </select>
+    </label>
+
+    <label>Status:
+      <select id="statusFilter">
+        <option value="">All</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+    </label>
+
+    <label>Priority:
+      <select id="priorityFilter">
+        <option value="">All</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </label>
+
+    <input type="text" id="searchInput" placeholder="Search title/description" />
+    <button id="loadBtn">Load Issues</button>
+    <span id="statusText" class="msg"></span>
+  </div>
+
+  <div class="analytics">
+    <div class="card">
+      <strong>Total Open</strong>
+      <span id="totalOpen">0</span>
+    </div>
+    <div class="card">
+      <strong>High & Critical</strong>
+      <span id="highCount">0</span>
+    </div>
+    <div class="card">
+      <strong>Resolved</strong>
+      <span id="resolvedCount">0</span>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Location</th>
+          <th>Reported By</th>
+          <th>Updated</th>
+          <th>Change Status</th>
+        </tr>
+      </thead>
+      <tbody id="issuesBody">
+        <!-- rows here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Detail panel -->
+  <div id="detailPanel" class="detail-panel" style="display:none;">
+    <h2>Issue Details</h2>
+    <div class="detail-grid">
+      <div>
+        <div class="detail-label">Title</div>
+        <div id="detailTitle" class="detail-value">-</div>
+      </div>
+      <div>
+        <div class="detail-label">Category</div>
+        <div id="detailCategory" class="detail-value">-</div>
+      </div>
+      <div>
+        <div class="detail-label">Priority</div>
+        <div id="detailPriority" class="detail-value">-</div>
+      </div>
+      <div>
+        <div class="detail-label">Status</div>
+        <div id="detailStatus" class="detail-value">-</div>
+      </div>
+      <div>
+        <div class="detail-label">Location</div>
+        <div id="detailLocation" class="detail-value">-</div>
+      </div>
+      <div>
+        <div class="detail-label">Reported By</div>
+        <div id="detailReportedBy" class="detail-value">-</div>
+      </div>
+      <div>
+        <div class="detail-label">Updated At</div>
+        <div id="detailUpdatedAt" class="detail-value">-</div>
+      </div>
+    </div>
+
+    <div class="detail-reason" id="detailClassReason">
+      <!-- Category reason -->
+    </div>
+    <div class="detail-reason" id="detailPriorityReason">
+      <!-- Priority reason -->
+    </div>
+
+    <div class="detail-reason">
+      <span class="detail-label">Description</span><br />
+      <span id="detailDescription" class="detail-value"></span>
+    </div>
+  </div>
+</main>
+
+<script>
+const API_BASE = "http://localhost:4000/api";
+
+const deptSelect = document.getElementById("deptSelect");
+const statusFilter = document.getElementById("statusFilter");
+const priorityFilter = document.getElementById("priorityFilter");
+const searchInput = document.getElementById("searchInput");
+const statusText = document.getElementById("statusText");
+const tbody = document.getElementById("issuesBody");
+
+const totalOpenEl = document.getElementById("totalOpen");
+const highCountEl = document.getElementById("highCount");
+const resolvedCountEl = document.getElementById("resolvedCount");
+
+// Detail panel elements
+const detailPanel = document.getElementById("detailPanel");
+const detailTitle = document.getElementById("detailTitle");
+const detailCategory = document.getElementById("detailCategory");
+const detailPriority = document.getElementById("detailPriority");
+const detailStatus = document.getElementById("detailStatus");
+const detailLocation = document.getElementById("detailLocation");
+const detailReportedBy = document.getElementById("detailReportedBy");
+const detailUpdatedAt = document.getElementById("detailUpdatedAt");
+const detailDescription = document.getElementById("detailDescription");
+const detailClassReason = document.getElementById("detailClassReason");
+const detailPriorityReason = document.getElementById("detailPriorityReason");
+
+let currentIssues = [];
+let staffKey = null; // from prompt
+
+function statusBadge(status) {
+  const s = (status || "").toLowerCase();
+  if (s === "in progress") return '<span class="badge status-inprogress">In Progress</span>';
+  if (s === "resolved") return '<span class="badge status-resolved">Resolved</span>';
+  return '<span class="badge status-open">Open</span>';
+}
+
+function priorityBadge(priority) {
+  const p = (priority || "").toLowerCase();
+  if (p === "critical") return '<span class="badge priority-critical">Critical</span>';
+  if (p === "high") return '<span class="badge priority-high">High</span>';
+  if (p === "medium") return '<span class="badge priority-medium">Medium</span>';
+  return '<span class="badge priority-low">Low</span>';
+}
+
+function applyFilters() {
+  const statusVal = statusFilter.value;
+  const priorityVal = priorityFilter.value;
+  const searchVal = searchInput.value.toLowerCase();
+
+  const filtered = currentIssues.filter(issue => {
+    if (statusVal && issue.status !== statusVal) return false;
+    if (priorityVal && issue.priority !== priorityVal) return false;
+    if (searchVal) {
+      const text = `${issue.title} ${issue.description || ""}`.toLowerCase();
+      if (!text.includes(searchVal)) return false;
+    }
+    return true;
+  });
+
+  renderTable(filtered);
+  updateAnalytics(filtered);
+}
+
+function renderTable(issues) {
+  tbody.innerHTML = issues.map(issue => `
+    <tr class="issueRow" data-id="${issue._id}">
+      <td>${issue.title}</td>
+      <td>${priorityBadge(issue.priority)}</td>
+      <td>${statusBadge(issue.status)}</td>
+      <td>${issue.locationText || "-"}</td>
+      <td>${issue.reportedBy || "-"}</td>
+      <td>${issue.updatedAt ? new Date(issue.updatedAt).toLocaleString() : "-"}</td>
+      <td>
+        <select data-id="${issue._id}" class="statusSelect" onclick="event.stopPropagation();">
+          <option value="Open" ${issue.status === "Open" ? "selected" : ""}>Open</option>
+          <option value="In Progress" ${issue.status === "In Progress" ? "selected" : ""}>In Progress</option>
+          <option value="Resolved" ${issue.status === "Resolved" ? "selected" : ""}>Resolved</option>
+        </select>
+      </td>
+    </tr>
+  `).join("");
+
+  // Row click → show details
+  document.querySelectorAll(".issueRow").forEach(row => {
+    row.addEventListener("click", () => {
+      const id = row.getAttribute("data-id");
+      const issue = currentIssues.find(i => i._id === id);
+      if (issue) {
+        showDetails(issue);
+      }
+    });
+  });
+
+  // Status dropdown change → updateStatus
+  document.querySelectorAll(".statusSelect").forEach(select => {
+    select.addEventListener("change", async (e) => {
+      const id = e.target.getAttribute("data-id");
+      const newStatus = e.target.value;
+      await updateStatus(id, newStatus);
+    });
+  });
+}
+
+function updateAnalytics(issues) {
+  const open = issues.filter(i => i.status === "Open").length;
+  const resolved = issues.filter(i => i.status === "Resolved").length;
+  const high = issues.filter(i => ["High", "Critical"].includes(i.priority)).length;
+
+  totalOpenEl.textContent = open;
+  resolvedCountEl.textContent = resolved;
+  highCountEl.textContent = high;
+}
+
+function showDetails(issue) {
+  detailTitle.textContent = issue.title || "-";
+  detailCategory.textContent = issue.category || "-";
+  detailPriority.textContent = issue.priority || "-";
+  detailStatus.textContent = issue.status || "-";
+  detailLocation.textContent = issue.locationText || "-";
+  detailReportedBy.textContent = issue.reportedBy || "-";
+  detailUpdatedAt.textContent = issue.updatedAt ? new Date(issue.updatedAt).toLocaleString() : "-";
+  detailDescription.textContent = issue.description || "-";
+
+  detailClassReason.innerHTML =
+    `<span class="detail-label">Category reasoning</span><br/>
+     <span class="detail-value">${issue.classificationReason || "No details available."}</span>`;
+
+  detailPriorityReason.innerHTML =
+    `<span class="detail-label">Priority reasoning</span><br/>
+     <span class="detail-value">${issue.priorityReason || "No details available."}</span>`;
+
+  detailPanel.style.display = "block";
+}
+
+async function loadIssues() {
+  const dept = deptSelect.value;
+  statusText.textContent = "Loading issues...";
+  tbody.innerHTML = "";
+  totalOpenEl.textContent = "0";
+  highCountEl.textContent = "0";
+  resolvedCountEl.textContent = "0";
+  detailPanel.style.display = "none";
+
+  try {
+    const res = await fetch(`${API_BASE}/issues?department=${encodeURIComponent(dept)}`);
+    const data = await res.json();
+    currentIssues = Array.isArray(data) ? data : [];
+    if (currentIssues.length === 0) {
+      statusText.textContent = "No issues assigned to this department.";
+    } else {
+      statusText.textContent = `Loaded ${currentIssues.length} issue(s). Click a row to view details.`;
+    }
+    applyFilters();
+  } catch (err) {
+    console.error(err);
+    statusText.textContent = "Failed to load issues.";
+  }
+}
+
+async function updateStatus(id, newStatus) {
+  try {
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    // Attach staff key if available
+    if (staffKey) {
+      headers["x-staff-key"] = staffKey;
+    }
+
+    const res = await fetch(`${API_BASE}/issues/${id}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 403) {
+        statusText.textContent = "Invalid or missing staff access code.";
+      } else {
+        statusText.textContent = "Failed to update status.";
+      }
+      console.error("Failed to update status", data);
+      return;
+    }
+
+    statusText.textContent = `Status updated to "${newStatus}".`;
+
+    const idx = currentIssues.findIndex(i => i._id === id);
+    if (idx !== -1) {
+      currentIssues[idx] = data;
+      applyFilters();
+      // If this issue is shown in details, update detail panel as well
+      showDetails(currentIssues[idx]);
+    }
+  } catch (err) {
+    console.error(err);
+    statusText.textContent = "Failed to update status.";
+  }
+}
+
+document.getElementById("loadBtn").addEventListener("click", loadIssues);
+statusFilter.addEventListener("change", applyFilters);
+priorityFilter.addEventListener("change", applyFilters);
+searchInput.addEventListener("input", applyFilters);
+
+// Ask for staff key and load default department on page load
+window.addEventListener("DOMContentLoaded", () => {
+  const statusEl = document.getElementById("staffAccessStatus");
+
+  staffKey = window.prompt("Enter staff access code to enable status changes:", "");
+
+  if (!staffKey) {
+    statusEl.textContent = "No access code entered (view-only mode)";
+  } else {
+    statusEl.textContent = "Verified locally (status changes enabled)";
+  }
+
+  loadIssues();
+});
+</script>
+</body>
+</html>

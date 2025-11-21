@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Campus MicroFix – Portal</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 8px;
+    }
+    p {
+      margin-top: 0;
+      color: #4b5563;
+    }
+    .buttons {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    a.button {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      background: #2563eb;
+      color: white;
+      transition: background 0.2s, transform 0.1s;
+    }
+    a.button.secondary {
+      background: #10b981;
+    }
+    a.button.outline {
+      background: white;
+      color: #111827;
+      border: 1px solid #d1d5db;
+    }
+    a.button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+    a.button.secondary:hover {
+      background: #059669;
+    }
+    a.button.outline:hover {
+      background: #f3f4f6;
+    }
+    small {
+      display: block;
+      margin-top: 12px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Campus MicroFix</h1>
+    <p>Campus micro-disruption alert & resolution system for quick fixes like broken desks, dead projectors, empty water coolers, or slow Wi-Fi.</p>
+
+    <div class="buttons">
+      <a href="report.html" class="button">Report a Micro-Issue</a>
+      <a href="student.html" class="button secondary">Track My Issues (Student)</a>
+      <a href="staff.html" class="button outline">Department Dashboard (Staff)</a>
+    </div>
+
+    <small>Hint for demo: use email <strong>student1@campus.edu</strong> and department <strong>IT</strong>.</small>
+  </div>
+</body>
+</html>
